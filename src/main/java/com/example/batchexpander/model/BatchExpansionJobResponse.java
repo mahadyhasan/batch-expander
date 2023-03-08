@@ -8,8 +8,11 @@ import java.util.Map;
 
 public class BatchExpansionJobResponse {
 
-    private final Map<String, Map<String, Object>> jobs;
-    private final Map<String, List<String>> dependencies;
+    private Map<String, Map<String, Object>> jobs;
+    private Map<String, List<String>> dependencies;
+
+    public BatchExpansionJobResponse() {
+    }
 
     @JsonCreator
     public BatchExpansionJobResponse(final @JsonProperty("jobs") Map<String, Map<String, Object>> jobs,
@@ -22,8 +25,16 @@ public class BatchExpansionJobResponse {
         return jobs;
     }
 
+    public void setJobs(Map<String, Map<String, Object>> jobs) {
+        this.jobs = jobs;
+    }
+
     public Map<String, List<String>> getDependencies() {
         return dependencies;
+    }
+
+    public void setDependencies(Map<String, List<String>> dependencies) {
+        this.dependencies = dependencies;
     }
 
     @Override

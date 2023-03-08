@@ -1,9 +1,11 @@
 package com.example.batchexpander.web.rest;
 
 import com.example.batchexpander.model.BatchExpansionJobRequest;
-import com.example.batchexpander.model.JobGroup;
+import com.example.batchexpander.model.BatchExpansionJobResponse;
+import com.example.batchexpander.service.JobExpansionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,13 +21,21 @@ public class BatchExpansionController {
 
     private static final Logger log = LoggerFactory.getLogger(BatchExpansionController.class);
 
-    @PostMapping(value = "/expandBatchJob", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createBatchExpansionJob(@Valid @RequestBody BatchExpansionJobRequest request) {
-        JobGroup jobGroup = JobGroup.fromString(request.getJobGroupName());
+    private final JobExpansionService jobExpansionService;
 
+    public BatchExpansionController(JobExpansionService jobExpansionService) {
+        this.jobExpansionService = jobExpansionService;
+    }
+
+
+    @PostMapping(value = "/expandBatchJob", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BatchExpansionJobResponse> createBatchExpansionJob(@Valid @RequestBody BatchExpansionJobRequest batchExpansionJobRequest) {
+
+        BatchExpansionJobResponse batchExpansionJobResponse = jobExpansionService.process(batchExpansionJobRequest);
 
         // Return a response to the client
-        return ResponseEntity.ok("Batch expansion job created successfully");
+        return ResponseEntity.status(HttpStatus.OK)
+                             .body(batchExpansionJobResponse);
     }
 
 
